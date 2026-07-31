@@ -107,7 +107,7 @@ st.title("🎮 Quiz Game từ File Word")
 # --------------------
 # Dùng file câu hỏi có sẵn trên repo
 # --------------------
-DOCX_FILE = "SOURCE SSG105(1).docx"
+DOCX_FILE = "SOURCE SSG105.docx"
 
 if os.path.exists(DOCX_FILE):
     quiz = read_quiz(DOCX_FILE)
