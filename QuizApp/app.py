@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 from docx import Document
 import json
@@ -265,4 +264,3 @@ if st.button("🗑️ Xóa tiến trình"):
         os.remove(PROGRESS_FILE)
 
     st.success("Đã xóa tiến trình! Hãy tải lại trang.")
-```
