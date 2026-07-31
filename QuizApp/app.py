@@ -80,7 +80,7 @@ def is_correct(user_answer, correct_answer):
 # Giao diện
 # --------------------
 st.set_page_config(
-    page_title="Quiz Game",
+    page_title="10 Điểm SSG cùng em Chí",
     page_icon="🎮",
     layout="wide"
 )
