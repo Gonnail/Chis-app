@@ -104,21 +104,19 @@ st.set_page_config(page_title="Quiz Game", page_icon="🎮", layout="wide")
 
 st.title("🎮 Quiz Game từ File Word")
 
-uploaded = st.file_uploader("Chọn file .docx", type=["docx"])
+# --------------------
+# Dùng file câu hỏi có sẵn trên repo
+# --------------------
+DOCX_FILE = "SOURCE SSG105(1).docx"
 
-# Dùng file mặc định trong repo nếu chưa upload
-if uploaded is None and os.path.exists("QuizApp/SOURCE SSG105(1).docx"):
-    uploaded = open("QuizApp/SOURCE SSG105(1).docx", "rb")
-
-if uploaded:
-    with open("temp.docx", "wb") as f:
-        f.write(uploaded.read())
-
-    quiz = read_quiz("temp.docx")
+if os.path.exists(DOCX_FILE):
+    quiz = read_quiz(DOCX_FILE)
     progress = load_progress()
 
-    st.success(f"Đã đọc {len(quiz)} câu hỏi")
-
+    st.success(f"Đã đọc {len(quiz)} câu hỏi từ {DOCX_FILE}")
+else:
+    st.error(f"Không tìm thấy file: {DOCX_FILE}")
+    st.stop()
     # --------------------
     # Sidebar
     # --------------------
