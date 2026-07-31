@@ -85,7 +85,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🎮 Quiz Game từ File Word")
+st.title("🎮 10 Điểm SSG cùng em Chí")
 
 
 # --------------------
