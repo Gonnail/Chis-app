@@ -1,12 +1,12 @@
+```python
 import streamlit as st
 from docx import Document
-import json
 import os
 import re
-import atexit
 
-PROGRESS_FILE = "progress.json"
-# Đường dẫn tuyệt đối tới file .docx cùng thư mục với app.py
+# --------------------
+# Đường dẫn file câu hỏi
+# --------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DOCX_FILE = os.path.join(BASE_DIR, "SOURCE SSG105.docx")
 
@@ -65,30 +65,6 @@ def read_quiz(docx_path):
 
 
 # --------------------
-# Lưu / tải tiến trình
-# --------------------
-def load_progress():
-    if os.path.exists(PROGRESS_FILE):
-        try:
-            with open(PROGRESS_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-
-            if "answers" not in data:
-                data["answers"] = {}
-
-            return data
-        except:
-            pass
-
-    return {"answers": {}}
-
-
-def save_progress(data):
-    with open(PROGRESS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-
-
-# --------------------
 # Kiểm tra đúng / sai
 # --------------------
 def is_correct(user_answer, correct_answer):
@@ -114,16 +90,24 @@ st.title("🎮 Quiz Game từ File Word")
 
 
 # --------------------
-# Đọc file có sẵn trên repo
+# Session riêng cho từng người
+# --------------------
+if "answers" not in st.session_state:
+    st.session_state.answers = {}
+
+progress = {"answers": st.session_state.answers}
+
+
+# --------------------
+# Đọc file câu hỏi có sẵn
 # --------------------
 if not os.path.exists(DOCX_FILE):
     st.error(f"❌ Không tìm thấy file: {DOCX_FILE}")
     st.stop()
 
 quiz = read_quiz(DOCX_FILE)
-progress = load_progress()
 
-st.success(f"📘 Đã đọc {len(quiz)} câu hỏi từ {DOCX_FILE}")
+st.success(f"📘 Đã đọc {len(quiz)} câu hỏi từ {os.path.basename(DOCX_FILE)}")
 
 
 # --------------------
@@ -156,19 +140,11 @@ st.sidebar.metric("Điểm hiện tại", f"{score}/{len(quiz)}")
 
 
 # --------------------
-# Tùy chọn tự động xóa
+# Nút làm mới bài
 # --------------------
-auto_clear = st.sidebar.checkbox(
-    "🧹 Tự động xóa tiến trình khi thoát app",
-    value=False
-)
-
-if auto_clear:
-    def clear_progress_on_exit():
-        if os.path.exists(PROGRESS_FILE):
-            os.remove(PROGRESS_FILE)
-
-    atexit.register(clear_progress_on_exit)
+if st.sidebar.button("🔄 Bắt đầu bài mới"):
+    st.session_state.answers = {}
+    st.rerun()
 
 
 # --------------------
@@ -203,13 +179,15 @@ for i, q in enumerate(quiz):
                 if checked:
                     selected.append(opt)
 
+        # Lưu session
         if selected:
             progress["answers"][key] = selected
         else:
             progress["answers"].pop(key, None)
 
-        save_progress(progress)
+        st.session_state.answers = progress["answers"]
 
+        # Chấm ngay khi chọn đủ số đáp án
         if len(selected) == required:
             if is_correct(selected, q["correct"]):
                 st.success("🎉 Chính xác!")
@@ -243,7 +221,7 @@ for i, q in enumerate(quiz):
         else:
             progress["answers"][key] = choice
 
-        save_progress(progress)
+        st.session_state.answers = progress["answers"]
 
         # Chỉ hiển thị kết quả khi đã chọn
         if choice != "-- Chưa chọn --":
@@ -261,8 +239,7 @@ for i, q in enumerate(quiz):
 # --------------------
 # Reset thủ công
 # --------------------
-if st.button("🗑️ Xóa tiến trình"):
-    if os.path.exists(PROGRESS_FILE):
-        os.remove(PROGRESS_FILE)
-
-    st.success("Đã xóa tiến trình! Hãy tải lại trang.")
+if st.button("🗑️ Xóa tất cả câu trả lời"):
+    st.session_state.answers = {}
+    st.rerun()
+```
