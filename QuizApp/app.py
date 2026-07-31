@@ -6,7 +6,9 @@ import re
 import atexit
 
 PROGRESS_FILE = "progress.json"
-DOCX_FILE = "SOURCE SSG105.docx"
+# Đường dẫn tuyệt đối tới file .docx cùng thư mục với app.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DOCX_FILE = os.path.join(BASE_DIR, "SOURCE SSG105.docx")
 
 
 # --------------------
