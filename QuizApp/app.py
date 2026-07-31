@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 from docx import Document
 import os
@@ -242,4 +241,3 @@ for i, q in enumerate(quiz):
 if st.button("🗑️ Xóa tất cả câu trả lời"):
     st.session_state.answers = {}
     st.rerun()
-```
