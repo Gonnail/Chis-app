@@ -104,8 +104,11 @@ st.set_page_config(page_title="Quiz Game", page_icon="🎮", layout="wide")
 
 st.title("🎮 Quiz Game từ File Word")
 
-if uploaded is None and os.path.exists("SOURCE SSG105(1).docx"):
-    uploaded = open("SOURCE SSG105(1).docx", "rb")
+uploaded = st.file_uploader("Chọn file .docx", type=["docx"])
+
+# Dùng file mặc định trong repo nếu chưa upload
+if uploaded is None and os.path.exists("QuizApp/SOURCE SSG105(1).docx"):
+    uploaded = open("QuizApp/SOURCE SSG105(1).docx", "rb")
 
 if uploaded:
     with open("temp.docx", "wb") as f:
